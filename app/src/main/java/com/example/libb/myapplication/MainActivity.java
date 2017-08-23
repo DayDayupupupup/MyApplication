@@ -7,22 +7,25 @@ import android.hardware.SensorManager;
 import android.support.v4.widget.TextViewCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import java.util.Calendar;
-import java.util.EventListener;
+import cn.bmob.v3.Bmob;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.SaveListener;
 
 public class MainActivity extends AppCompatActivity{
 
     private static final String TAG = "SensorData";
 
     private SensorManager sensorManager;
-    private TextView accX,accY,accZ;
+    private TextView acceX,acceY,acceZ;
     private TextView magX,magY,magZ;
     private TextView gyroX,gyroY,gyroZ;
-    private Button btnStart,btnStop;
+    //private Button btnStart,btnStop;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,12 +36,16 @@ public class MainActivity extends AppCompatActivity{
 //        Sensor gyroSensor = sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE);
 //        Sensor magSensor = sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
         initView();
+        //默认初始化
+        Bmob.initialize(this, "e417769f32aabea045cbb4572a206f0f");
+        // 注:自v3.5.2开始，数据sdk内部缝合了统计sdk，开发者无需额外集成，传渠道参数即可，不传默认没开启数据统计功能
+        //Bmob.initialize(this, "Your Application ID","bmob");
     }
 
     private void initView() {
-        accX = (TextView) findViewById(R.id.accX);
-        accY = (TextView) findViewById(R.id.accY);
-        accZ = (TextView) findViewById(R.id.accZ);
+        acceX = (TextView) findViewById(R.id.acceX);
+        acceY = (TextView) findViewById(R.id.acceY);
+        acceZ = (TextView) findViewById(R.id.acceZ);
 
         magX = (TextView) findViewById(R.id.magX);
         magY = (TextView) findViewById(R.id.magY);
@@ -48,12 +55,16 @@ public class MainActivity extends AppCompatActivity{
         gyroY = (TextView) findViewById(R.id.gyroY);
         gyroZ = (TextView) findViewById(R.id.gyroZ);
 
-        btnStart = (Button) findViewById(R.id.btnStart);
-        btnStop = (Button) findViewById(R.id.btnStop);
+//        btnStart = (Button) findViewById(R.id.btnStart);
+//        btnStop = (Button) findViewById(R.id.btnStop);
     }
 
-    public void onClick(View V){
+    public void startRecord(View V){
+        Toast.makeText(MainActivity.this,"通过配置onClick属性实现单击监听开始记录",Toast.LENGTH_SHORT).show();
 
+    }
+    public void stopRecord(View V){
+        Toast.makeText(MainActivity.this,"通过配置onClick属性实现单击监听结束记录",Toast.LENGTH_SHORT).show();
     }
     @Override
     protected void onResume() {
@@ -64,13 +75,39 @@ public class MainActivity extends AppCompatActivity{
         sensorManager.registerListener(listenerGyro,sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE),SensorManager.SENSOR_DELAY_UI);
     }
 
+    Info info = new Info();
+
+
+
     private SensorEventListener listenerAcce = new SensorEventListener() {
         @Override
         public void onSensorChanged(SensorEvent event) {
             if(event.sensor.getType() == Sensor.TYPE_ACCELEROMETER){
-                accX.setText("x:"+ event.values[0]);
-                accY.setText("y:"+ event.values[1]);
-                accZ.setText("z:"+ event.values[2]);
+                acceX.setText("x:"+ event.values[0]);
+                acceY.setText("y:"+ event.values[1]);
+                acceZ.setText("z:"+ event.values[2]);
+                info.setAcceX("11");
+                info.setAcceY("1");
+                info.setAcceZ("2");
+                info.setGyroX("3");
+                info.setGyroY("4");
+                info.setGyroZ("5");
+                info.setMagX("6");
+                info.setMagY("7");
+                info.setMagZ("8");
+                info.setPositionX("0");
+                info.setPositionY("1");
+                info.save(new SaveListener<String>() {
+                    @Override
+                    public void done(String objectId, BmobException e) {
+                        if(e == null){
+                            Toast.makeText(MainActivity.this,"添加数据成功",Toast.LENGTH_SHORT).show();
+                            Log.d("post","yes");
+                        }else {
+                            Toast.makeText(MainActivity.this,"创建数据失败：",Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
             }
         }
 
