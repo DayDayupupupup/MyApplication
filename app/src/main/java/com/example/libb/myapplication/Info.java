@@ -1,22 +1,28 @@
 package com.example.libb.myapplication;
 
 import cn.bmob.v3.BmobObject;
+import cn.bmob.v3.listener.FindListener;
 
 /**
  * Created by LiBB on 2017/8/23.
  */
 
 public class Info extends BmobObject{
-    private String positionX;
-    private String positionY;
-    private String acceX,acceY,acceZ;
-    private String magX,magY,magZ;
-    private String gyroX,gyroY,gyroZ;
+    public String positionX;
+    public String positionY;
+    public Float acceX;
+    public Float acceY;
+    public Float acceZ;
+    public Float magX;
+    public Float magY;
+    public Float magZ;
+    public Float gyroX;
+    public Float gyroY;
+    public Float gyroZ;
 
-    public Info(){
-        this.setTableName("info");
-    }
-
+//    public Info(){
+//        this.setTableName("info");
+//    }
     public String getPositionX() {
         return positionX;
     }
@@ -24,43 +30,6 @@ public class Info extends BmobObject{
     public String getPositionY() {
         return positionY;
     }
-
-    public String getAcceX() {
-        return acceX;
-    }
-
-    public String getAcceY() {
-        return acceY;
-    }
-
-    public String getAcceZ() {
-        return acceZ;
-    }
-
-    public String getMagX() {
-        return magX;
-    }
-
-    public String getMagY() {
-        return magY;
-    }
-
-    public String getMagZ() {
-        return magZ;
-    }
-
-    public String getGyroX() {
-        return gyroX;
-    }
-
-    public String getGyroY() {
-        return gyroY;
-    }
-
-    public String getGyroZ() {
-        return gyroZ;
-    }
-
     public void setPositionX(String positionX) {
         this.positionX = positionX;
     }
@@ -69,39 +38,75 @@ public class Info extends BmobObject{
         this.positionY = positionY;
     }
 
-    public void setAcceX(String acceX) {
+    public Float getAcceX() {
+        return acceX;
+    }
+
+    public void setAcceX(Float acceX) {
         this.acceX = acceX;
     }
 
-    public void setAcceY(String acceY) {
+    public Float getAcceY() {
+        return acceY;
+    }
+
+    public void setAcceY(Float acceY) {
         this.acceY = acceY;
     }
 
-    public void setAcceZ(String acceZ) {
+    public Float getAcceZ() {
+        return acceZ;
+    }
+
+    public void setAcceZ(Float acceZ) {
         this.acceZ = acceZ;
     }
 
-    public void setMagX(String magX) {
+    public Float getMagX() {
+        return magX;
+    }
+
+    public void setMagX(Float magX) {
         this.magX = magX;
     }
 
-    public void setMagY(String magY) {
+    public Float getMagY() {
+        return magY;
+    }
+
+    public void setMagY(Float magY) {
         this.magY = magY;
     }
 
-    public void setMagZ(String magZ) {
+    public Float getMagZ() {
+        return magZ;
+    }
+
+    public void setMagZ(Float magZ) {
         this.magZ = magZ;
     }
 
-    public void setGyroX(String gyroX) {
+    public Float getGyroX() {
+        return gyroX;
+    }
+
+    public void setGyroX(Float gyroX) {
         this.gyroX = gyroX;
     }
 
-    public void setGyroY(String gyroY) {
+    public Float getGyroY() {
+        return gyroY;
+    }
+
+    public void setGyroY(Float gyroY) {
         this.gyroY = gyroY;
     }
 
-    public void setGyroZ(String gyroZ) {
+    public Float getGyroZ() {
+        return gyroZ;
+    }
+
+    public void setGyroZ(Float gyroZ) {
         this.gyroZ = gyroZ;
     }
 }

@@ -70,44 +70,61 @@ public class MainActivity extends AppCompatActivity{
     protected void onResume() {
         super.onResume();
         // 为方向传感器注册监听器
-        sensorManager.registerListener(listenerAcce,sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_UI);
-        sensorManager.registerListener(listenerMag,sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD),SensorManager.SENSOR_DELAY_UI);
-        sensorManager.registerListener(listenerGyro,sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE),SensorManager.SENSOR_DELAY_UI);
+        sensorManager.registerListener(mySensorListener,sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_UI);
+        sensorManager.registerListener(mySensorListener,sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD),SensorManager.SENSOR_DELAY_UI);
+        sensorManager.registerListener(mySensorListener,sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE),SensorManager.SENSOR_DELAY_UI);
     }
 
     Info info = new Info();
 
 
 
-    private SensorEventListener listenerAcce = new SensorEventListener() {
+    private SensorEventListener mySensorListener = new SensorEventListener() {
         @Override
         public void onSensorChanged(SensorEvent event) {
-            if(event.sensor.getType() == Sensor.TYPE_ACCELEROMETER){
-                acceX.setText("x:"+ event.values[0]);
-                acceY.setText("y:"+ event.values[1]);
-                acceZ.setText("z:"+ event.values[2]);
-                info.setAcceX("11");
-                info.setAcceY("1");
-                info.setAcceZ("2");
-                info.setGyroX("3");
-                info.setGyroY("4");
-                info.setGyroZ("5");
-                info.setMagX("6");
-                info.setMagY("7");
-                info.setMagZ("8");
-                info.setPositionX("0");
-                info.setPositionY("1");
-                info.save(new SaveListener<String>() {
-                    @Override
-                    public void done(String objectId, BmobException e) {
-                        if(e == null){
-                            Toast.makeText(MainActivity.this,"添加数据成功",Toast.LENGTH_SHORT).show();
-                            Log.d("post","yes");
-                        }else {
-                            Toast.makeText(MainActivity.this,"创建数据失败：",Toast.LENGTH_SHORT).show();
-                        }
+            switch(event.sensor.getType()){
+                case Sensor.TYPE_ACCELEROMETER :
+                    synchronized (info){
+                        acceX.setText("x:"+ event.values[0]);
+                        acceY.setText("y:"+ event.values[1]);
+                        acceZ.setText("z:"+ event.values[2]);
+                        info.setAcceX(event.values[0]);
+                        info.setAcceY(event.values[1]);
+                        info.setAcceZ(event.values[2]);
+                 }
+                 break;
+                case Sensor.TYPE_MAGNETIC_FIELD :
+                    synchronized (info){
+                        magX.setText("x:"+ event.values[0]);
+                        magY.setText("y:"+ event.values[1]);
+                        magZ.setText("z:"+ event.values[2]);
+                        info.setMagX(event.values[0]);
+                        info.setMagY(event.values[1]);
+                        info.setMagZ(event.values[2]);
+
                     }
-                });
+                    break;
+                case Sensor.TYPE_GYROSCOPE :
+                    synchronized (info){
+                        gyroX.setText("x:"+ event.values[0]);
+                        gyroY.setText("y:"+ event.values[1]);
+                        gyroZ.setText("z:"+ event.values[2]);
+                        info.setGyroX(event.values[0]);
+                        info.setGyroY(event.values[1]);
+                        info.setGyroZ(event.values[2]);
+                        info.save(new SaveListener<String>() {
+                            @Override
+                            public void done(String objectId, BmobException e) {
+                                if(e == null){
+                                    Toast.makeText(MainActivity.this,"添加数据成功",Toast.LENGTH_SHORT).show();
+                                    Log.d(TAG,"yes");
+                                }else {
+                                    Toast.makeText(MainActivity.this,"创建数据失败：",Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                    }
+                    break;
             }
         }
 
@@ -116,42 +133,42 @@ public class MainActivity extends AppCompatActivity{
 
         }
     };
-    private SensorEventListener listenerMag = new SensorEventListener() {
-        @Override
-        public void onSensorChanged(SensorEvent event) {
-            if(event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD){
-                magX.setText("x:"+ event.values[0]);
-                magY.setText("y:"+ event.values[1]);
-                magZ.setText("z:"+ event.values[2]);
-            }
-        }
-
-        @Override
-        public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
-        }
-    };
-    private SensorEventListener listenerGyro = new SensorEventListener() {
-        @Override
-        public void onSensorChanged(SensorEvent event) {
-            if(event.sensor.getType() == Sensor.TYPE_GYROSCOPE){
-                gyroX.setText("x:"+ event.values[0]);
-                gyroY.setText("y:"+ event.values[1]);
-                gyroZ.setText("z:"+ event.values[2]);
-            }
-        }
-
-        @Override
-        public void onAccuracyChanged(Sensor sensor, int accuracy) {
-
-        }
-    };
+//    private SensorEventListener listenerMag = new SensorEventListener() {
+//        @Override
+//        public void onSensorChanged(SensorEvent event) {
+//            if(event.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD){
+//                magX.setText("x:"+ event.values[0]);
+//                magY.setText("y:"+ event.values[1]);
+//                magZ.setText("z:"+ event.values[2]);
+//            }
+//        }
+//
+//        @Override
+//        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+//
+//        }
+//    };
+//    private SensorEventListener listenerGyro = new SensorEventListener() {
+//        @Override
+//        public void onSensorChanged(SensorEvent event) {
+//            if(event.sensor.getType() == Sensor.TYPE_GYROSCOPE){
+//                gyroX.setText("x:"+ event.values[0]);
+//                gyroY.setText("y:"+ event.values[1]);
+//                gyroZ.setText("z:"+ event.values[2]);
+//            }
+//        }
+//
+//        @Override
+//        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+//
+//        }
+//    };
 
     @Override
     protected void onDestroy(){
         super.onDestroy();
         if(sensorManager!= null){
-            sensorManager.unregisterListener(listenerAcce);
+            sensorManager.unregisterListener(mySensorListener);
         }
     }
 }
