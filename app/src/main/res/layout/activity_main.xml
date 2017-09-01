@@ -26,18 +26,18 @@
             android:layout_height="wrap_content"
             android:text="x:" />
 
-        <EditText
-            android:id="@+id/positionX"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:inputType="phone" />
+            <EditText
+                android:id="@+id/posX"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:inputType="phone" />
 
-        <TextView
+            <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Y:" />
             <EditText
-                android:id="@+id/positionY"
+                android:id="@+id/posY"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:inputType="phone"/>

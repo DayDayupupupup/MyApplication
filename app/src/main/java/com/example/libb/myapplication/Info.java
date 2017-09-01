@@ -8,8 +8,8 @@ import cn.bmob.v3.listener.FindListener;
  */
 
 public class Info extends BmobObject{
-    public String positionX;
-    public String positionY;
+    public String posX;
+    public String posY;
     public Float acceX;
     public Float acceY;
     public Float acceZ;
@@ -23,19 +23,22 @@ public class Info extends BmobObject{
 //    public Info(){
 //        this.setTableName("info");
 //    }
-    public String getPositionX() {
-        return positionX;
+
+
+    public String getPosX() {
+        return posX;
     }
 
-    public String getPositionY() {
-        return positionY;
-    }
-    public void setPositionX(String positionX) {
-        this.positionX = positionX;
+    public void setPosX(String posX) {
+        this.posX = posX;
     }
 
-    public void setPositionY(String positionY) {
-        this.positionY = positionY;
+    public String getPosY() {
+        return posY;
+    }
+
+    public void setPosY(String posY) {
+        this.posY = posY;
     }
 
     public Float getAcceX() {
