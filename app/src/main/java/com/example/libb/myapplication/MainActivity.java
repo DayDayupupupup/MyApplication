@@ -6,11 +6,14 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.view.menu.ListMenuItemView;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.util.List;
 
 import cn.bmob.v3.Bmob;
 import cn.bmob.v3.exception.BmobException;
@@ -25,7 +28,9 @@ public class MainActivity extends AppCompatActivity{
     private TextView magX,magY,magZ;
     private TextView gyroX,gyroY,gyroZ;
     private EditText posX,posY,length;
+    private TextView setpCounter,stepDetect;
     private Boolean flag = false;
+    private int mDetector = 0;
     //private Button btnStart,btnStop;
 
     @Override
@@ -38,6 +43,9 @@ public class MainActivity extends AppCompatActivity{
         sensorManager.registerListener(mySensorListener,sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_UI);
         sensorManager.registerListener(mySensorListener,sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD),SensorManager.SENSOR_DELAY_UI);
         sensorManager.registerListener(mySensorListener,sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE),SensorManager.SENSOR_DELAY_UI);
+        sensorManager.registerListener(stepListener,sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER),SensorManager.SENSOR_DELAY_UI);
+        sensorManager.registerListener(stepListener,sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR),SensorManager.SENSOR_DELAY_UI);
+
 
     }
 
@@ -56,6 +64,9 @@ public class MainActivity extends AppCompatActivity{
 
         posX = (EditText) findViewById(R.id.posX);
         posY = (EditText) findViewById(R.id.posY);
+
+        setpCounter = (TextView) findViewById(R.id.setpCounter);
+        stepDetect = (TextView) findViewById(R.id.stepDetect);
 
 //        btnStart = (Button) findViewById(R.id.btnStart);
 //        btnStop = (Button) findViewById(R.id.btnStop);
@@ -122,6 +133,38 @@ public class MainActivity extends AppCompatActivity{
                     break;
             }
         }
+        @Override
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+
+        }
+    };
+
+    private SensorEventListener stepListener = new SensorEventListener() {
+        @Override
+        public void onSensorChanged(SensorEvent event) {
+            if (event.sensor.getType() == Sensor.TYPE_STEP_COUNTER) {
+
+                //event.values[0]为计步历史累加值
+
+                setpCounter.setText("步数："+event.values[0] + "步");
+
+            }
+
+            if (event.sensor.getType() == Sensor.TYPE_STEP_DETECTOR) {
+
+                if (event.values[0] == 1.0) {
+
+                    mDetector++;
+
+                    //event.values[0]一次有效计步数据
+
+                    stepDetect.setText("有效步数"+ mDetector + "步");
+
+                }
+
+            }
+        }
+
         @Override
         public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
