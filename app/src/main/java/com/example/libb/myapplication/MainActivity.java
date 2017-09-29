@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity{
         setContentView(R.layout.activity_main);
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         initView();
-        Bmob.initialize(this, "e417769f32aabea045cbb4572a206f0f");//默认初始化
+        Bmob.initialize(this,"a76ff9c6f82ef85ad29bb8528ee90719");//默认初始化
         sensorManager.registerListener(mySensorListener,sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_UI);
         sensorManager.registerListener(mySensorListener,sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD),SensorManager.SENSOR_DELAY_UI);
         sensorManager.registerListener(mySensorListener,sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE),SensorManager.SENSOR_DELAY_UI);
