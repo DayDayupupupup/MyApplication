@@ -18,11 +18,7 @@ android {
         }
         useLibrary 'org.apache.http.legacy'
     }
-    externalNativeBuild {
-        cmake {
-            path "CMakeLists.txt"  //默认用cmake进行编译，这里指定编译文件路径
-        }
-    }
+
 }
 
 dependencies {
