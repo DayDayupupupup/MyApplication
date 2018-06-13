@@ -4,22 +4,28 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.view.menu.ListMenuItemView;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import java.util.List;
+import android.content.Intent;
 
 import cn.bmob.v3.Bmob;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
 
-public class MainActivity extends AppCompatActivity{
+public class MainActivity extends AppCompatActivity implements View.OnTouchListener,GestureDetector.OnGestureListener {
 
     private static final String TAG = "SensorData";
 
@@ -31,12 +37,25 @@ public class MainActivity extends AppCompatActivity{
     private TextView setpCounter,stepDetect;
     private Boolean flag = false;
     private int mDetector = 0;
+    private RelativeLayout stepLayout;
+    private GestureDetector gestureDetector;
+
+
     //private Button btnStart,btnStop;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        stepLayout = (RelativeLayout) findViewById(R.id.step_layout);
+        //stepLayout.setLongClickable(true);
+        //stepLayout.setOnTouchListener(this);
+
+        gestureDetector = new GestureDetector((GestureDetector.OnGestureListener)this);
+
+
+
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         initView();
         Bmob.initialize(this,"a76ff9c6f82ef85ad29bb8528ee90719");//默认初始化
@@ -45,7 +64,6 @@ public class MainActivity extends AppCompatActivity{
         sensorManager.registerListener(mySensorListener,sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE),SensorManager.SENSOR_DELAY_UI);
         sensorManager.registerListener(stepListener,sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER),SensorManager.SENSOR_DELAY_UI);
         sensorManager.registerListener(stepListener,sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR),SensorManager.SENSOR_DELAY_UI);
-
 
     }
 
@@ -177,5 +195,54 @@ public class MainActivity extends AppCompatActivity{
         if(sensorManager!= null){
             sensorManager.unregisterListener(mySensorListener);
         }
+    }
+
+    @Override
+    public boolean onDown(MotionEvent motionEvent) {
+        return false;
+    }
+
+    @Override
+    public void onShowPress(MotionEvent motionEvent) {
+
+    }
+
+    @Override
+    public boolean onSingleTapUp(MotionEvent motionEvent) {
+        return false;
+    }
+
+    @Override
+    public boolean onScroll(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
+        return false;
+    }
+
+    @Override
+    public void onLongPress(MotionEvent motionEvent) {
+
+    }
+
+    @Override
+    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+        final int FLING_MIN_DISTANCE=100;
+        final int FLING_MIN_VELOCITY=200;
+
+        //左
+        //if(e1.getX() - e2.getX() > FLING_MIN_DISTANCE && Math.abs(velocityX) > FLING_MIN_VELOCITY){
+        //    Intent intent = new Intent(ResultActivity.this,MessageActivity.class);
+         //   startActivity(intent);
+       // }
+        //右
+        if(e1.getX() - e2.getX() < FLING_MIN_DISTANCE && Math.abs(velocityX) < FLING_MIN_VELOCITY){
+            Intent intent = new Intent(MainActivity.this,StepActivity.class);
+            startActivity(intent);
+        }
+
+        return false;
+    }
+
+    @Override
+    public boolean onTouch(View view, MotionEvent motionEvent) {
+        return false;
     }
 }
