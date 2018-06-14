@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     private int mDetector = 0;
     private RelativeLayout stepLayout;
     private GestureDetector gestureDetector;
+    private Button button2;
 
 
     //private Button btnStart,btnStop;
@@ -64,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         sensorManager.registerListener(mySensorListener,sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE),SensorManager.SENSOR_DELAY_UI);
         sensorManager.registerListener(stepListener,sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER),SensorManager.SENSOR_DELAY_UI);
         sensorManager.registerListener(stepListener,sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR),SensorManager.SENSOR_DELAY_UI);
+
 
     }
 
