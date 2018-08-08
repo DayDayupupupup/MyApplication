@@ -1,5 +1,9 @@
 package com.example.libb.myapplication;
 
+import android.hardware.Sensor;
+
+import java.security.PublicKey;
+
 import cn.bmob.v3.BmobObject;
 import cn.bmob.v3.listener.FindListener;
 
@@ -10,6 +14,8 @@ import cn.bmob.v3.listener.FindListener;
 public class Info extends BmobObject{
     public String posX;
     public String posY;
+    public String step;
+    public int step_auto;
     public Float acceX;
     public Float acceY;
     public Float acceZ;
@@ -19,10 +25,12 @@ public class Info extends BmobObject{
     public Float gyroX;
     public Float gyroY;
     public Float gyroZ;
+    public Float orieX;
+    public Float orieY;
+    public Float orieZ;
+
 
 //    public Info(){
-//        this.setTableName("info");
-//    }
 
 
     public String getPosX() {
@@ -39,6 +47,22 @@ public class Info extends BmobObject{
 
     public void setPosY(String posY) {
         this.posY = posY;
+    }
+
+    public String getStep() {
+        return step;
+    }
+
+    public void setStep(String step) {
+        this.step = step;
+    }
+
+    public int getStep_auto() {
+        return step_auto;
+    }
+
+    public void setStep_auto(int step_auto) {
+        this.step_auto = step_auto;
     }
 
     public Float getAcceX() {
@@ -111,5 +135,29 @@ public class Info extends BmobObject{
 
     public void setGyroZ(Float gyroZ) {
         this.gyroZ = gyroZ;
+    }
+
+    public Float getOrieX() {
+        return orieX;
+    }
+
+    public void setOrieX(Float orieX) {
+        this.orieX = orieX;
+    }
+
+    public Float getOrieY() {
+        return orieY;
+    }
+
+    public void setOrieY(Float orieY) {
+        this.orieY = orieY;
+    }
+
+    public Float getOrieZ() {
+        return orieZ;
+    }
+
+    public void setOrieZ(Float orieZ) {
+        this.orieZ = orieZ;
     }
 }

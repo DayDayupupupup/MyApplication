@@ -4,29 +4,19 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.view.menu.ListMenuItemView;
 import android.util.Log;
-import android.view.GestureDetector;
-import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.content.Intent;
 
 import cn.bmob.v3.Bmob;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.SaveListener;
 
-public class MainActivity extends AppCompatActivity implements View.OnTouchListener,GestureDetector.OnGestureListener {
+public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = "SensorData";
 
@@ -34,13 +24,12 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
     private TextView acceX,acceY,acceZ;
     private TextView magX,magY,magZ;
     private TextView gyroX,gyroY,gyroZ;
-    private EditText posX,posY,length;
+    private EditText posX,posY,step;
+    private TextView orieX,orieY,orieZ;
     private TextView setpCounter,stepDetect;
     private Boolean flag = false;
     private int mDetector = 0;
-    private RelativeLayout stepLayout;
-    private GestureDetector gestureDetector;
-    private Button button2;
+
 
 
     //private Button btnStart,btnStop;
@@ -50,22 +39,15 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        stepLayout = (RelativeLayout) findViewById(R.id.step_layout);
-        //stepLayout.setLongClickable(true);
-        //stepLayout.setOnTouchListener(this);
-
-        gestureDetector = new GestureDetector((GestureDetector.OnGestureListener)this);
-
-
-
         sensorManager = (SensorManager) getSystemService(SENSOR_SERVICE);
         initView();
         Bmob.initialize(this,"a76ff9c6f82ef85ad29bb8528ee90719");//默认初始化
         sensorManager.registerListener(mySensorListener,sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_UI);
         sensorManager.registerListener(mySensorListener,sensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD),SensorManager.SENSOR_DELAY_UI);
         sensorManager.registerListener(mySensorListener,sensorManager.getDefaultSensor(Sensor.TYPE_GYROSCOPE),SensorManager.SENSOR_DELAY_UI);
-        sensorManager.registerListener(stepListener,sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER),SensorManager.SENSOR_DELAY_UI);
-        sensorManager.registerListener(stepListener,sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR),SensorManager.SENSOR_DELAY_UI);
+        sensorManager.registerListener(stepListener,sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER),SensorManager.SENSOR_DELAY_FASTEST);
+        sensorManager.registerListener(stepListener,sensorManager.getDefaultSensor(Sensor.TYPE_STEP_DETECTOR),SensorManager.SENSOR_DELAY_FASTEST);
+        sensorManager.registerListener(mySensorListener,sensorManager.getDefaultSensor(Sensor.TYPE_ORIENTATION),SensorManager.SENSOR_DELAY_UI);
 
 
     }
@@ -83,8 +65,13 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         gyroY = (TextView) findViewById(R.id.gyroY);
         gyroZ = (TextView) findViewById(R.id.gyroZ);
 
+        orieX = (TextView) findViewById(R.id.orieX);
+        orieY = (TextView) findViewById(R.id.orieY);
+        orieZ = (TextView) findViewById(R.id.orieZ);
+
         posX = (EditText) findViewById(R.id.posX);
         posY = (EditText) findViewById(R.id.posY);
+        step = (EditText) findViewById(R.id.step);
 
         setpCounter = (TextView) findViewById(R.id.setpCounter);
         stepDetect = (TextView) findViewById(R.id.stepDetect);
@@ -99,6 +86,7 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         flag = true;
         info.setPosX(posX.getText().toString());
         info.setPosY(posY.getText().toString());
+        info.setStep(step.getText().toString());
         Log.d(TAG,"start");
         Toast.makeText(MainActivity.this,"开始上传数据",Toast.LENGTH_SHORT).show();
     }
@@ -112,23 +100,36 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         @Override
         public void onSensorChanged(SensorEvent event) {
             switch(event.sensor.getType()){
+                case Sensor.TYPE_MAGNETIC_FIELD :
+                    //Log.d(TAG,"TYPE");
+                    synchronized (info){
+                        //Log.d(TAG,"WHY");
+                        magX.setText("x:"+ event.values[0]);
+                        magY.setText("y:"+ event.values[1]);
+                        magZ.setText("z:"+ event.values[2]);
+                        //Log.d(TAG,"MAG"+event.values[0]);
+                        info.setMagX(event.values[0]);
+                        info.setMagY(event.values[1]);
+                        info.setMagZ(event.values[2]);}
+                    break;
                 case Sensor.TYPE_ACCELEROMETER :
                     synchronized (info){
                         acceX.setText("x:"+ event.values[0]);
                         acceY.setText("y:"+ event.values[1]);
                         acceZ.setText("z:"+ event.values[2]);
+                        //Log.d(TAG,"ACCE"+event.values[0]);
                         info.setAcceX(event.values[0]);
                         info.setAcceY(event.values[1]);
                         info.setAcceZ(event.values[2]);}
                  break;
-                case Sensor.TYPE_MAGNETIC_FIELD :
+                case Sensor.TYPE_ORIENTATION :
                     synchronized (info){
-                        magX.setText("x:"+ event.values[0]);
-                        magY.setText("y:"+ event.values[1]);
-                        magZ.setText("z:"+ event.values[2]);
-                        info.setMagX(event.values[0]);
-                        info.setMagY(event.values[1]);
-                        info.setMagZ(event.values[2]);}
+                        orieX.setText("x:"+ event.values[0]);
+                        orieY.setText("y:"+ event.values[1]);
+                        orieZ.setText("z:"+ event.values[2]);
+                        info.setOrieX(event.values[0]);
+                        info.setOrieY(event.values[1]);
+                        info.setOrieZ(event.values[2]);}
                     break;
                 case Sensor.TYPE_GYROSCOPE :
                     synchronized (info){
@@ -180,7 +181,19 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
                     //event.values[0]一次有效计步数据
 
                     stepDetect.setText("有效步数"+ mDetector + "步");
-
+                    info.setStep_auto(mDetector);
+                    if(flag == true){
+                        info.save(new SaveListener<String>() {
+                            @Override
+                            public void done(String objectId, BmobException e) {
+                                if(e == null){
+                                    //Toast.makeText(MainActivity.this,"添加数据成功",Toast.LENGTH_SHORT).show();
+                                }else {
+//                                        Toast.makeText(MainActivity.this,"创建数据失败：",Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+                    }
                 }
 
             }
@@ -200,52 +213,5 @@ public class MainActivity extends AppCompatActivity implements View.OnTouchListe
         }
     }
 
-    @Override
-    public boolean onDown(MotionEvent motionEvent) {
-        return false;
-    }
 
-    @Override
-    public void onShowPress(MotionEvent motionEvent) {
-
-    }
-
-    @Override
-    public boolean onSingleTapUp(MotionEvent motionEvent) {
-        return false;
-    }
-
-    @Override
-    public boolean onScroll(MotionEvent motionEvent, MotionEvent motionEvent1, float v, float v1) {
-        return false;
-    }
-
-    @Override
-    public void onLongPress(MotionEvent motionEvent) {
-
-    }
-
-    @Override
-    public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-        final int FLING_MIN_DISTANCE=100;
-        final int FLING_MIN_VELOCITY=200;
-
-        //左
-        //if(e1.getX() - e2.getX() > FLING_MIN_DISTANCE && Math.abs(velocityX) > FLING_MIN_VELOCITY){
-        //    Intent intent = new Intent(ResultActivity.this,MessageActivity.class);
-         //   startActivity(intent);
-       // }
-        //右
-        if(e1.getX() - e2.getX() < FLING_MIN_DISTANCE && Math.abs(velocityX) < FLING_MIN_VELOCITY){
-            Intent intent = new Intent(MainActivity.this,StepActivity.class);
-            startActivity(intent);
-        }
-
-        return false;
-    }
-
-    @Override
-    public boolean onTouch(View view, MotionEvent motionEvent) {
-        return false;
-    }
 }
